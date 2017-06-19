@@ -9,6 +9,9 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   });
 });
 
+
+
+
 (function (global) {
 
 var dc = {};
@@ -17,7 +20,39 @@ var homeHtmlUrl = "snippets/home-snippet.html";
 var allCategoriesUrl =
   "https://davids-restaurant.herokuapp.com/categories.json";
 var categoriesTitleHtml = "snippets/categories-title-snippet.html";
-var categoryHtml = "snippets/category-snippet.html";
+
+
+console.log("Before categoryHtml Invocation"); 
+var categoryHtmlToPick = "snippets/category-snippet.html"; 
+//var categoryHtml = "snippets/category-snippet.html";
+
+var categoryHtml = ""; 
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      categoryHtml = this.responseText;
+      
+    }
+  };
+  xhttp.open("GET", categoryHtmlToPick, false);
+  xhttp.send();
+}
+
+loadDoc(); 
+console.log("categoryHtml" + categoryHtml); 
+
+function donothing(text){
+  console.log("in donothing"); 
+  categoryHtml = text;   
+} 
+
+console.log("before"); 
+
+console.log("after" + categoryHtml); 
+
+
 var menuItemsUrl =
   "https://davids-restaurant.herokuapp.com/menu_items.json?category=";
 var menuItemsTitleHtml = "snippets/menu-items-title.html";
@@ -40,6 +75,8 @@ var showLoading = function (selector) {
 // with propValue in given 'string'
 var insertProperty = function (string, propName, propValue) {
   var propToReplace = "{{" + propName + "}}";
+  
+  console.log("inside insert Property")
   string = string
     .replace(new RegExp(propToReplace, "g"), propValue);
   return string;
@@ -83,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 showLoading("#main-content");
 $ajaxUtils.sendGetRequest(
   allCategoriesUrl,
-  [...], // ***** <---- TODO: STEP 1: Substitute [...] ******
+  buildAndShowHomeHTML, // ***** <---- TODO: STEP 1: Substitute [...] ******
   true); // Explicitely setting the flag to get JSON from server processed into an object literal
 });
 // *** finish **
@@ -101,8 +138,26 @@ function buildAndShowHomeHTML (categories) {
       // TODO: STEP 2: Here, call chooseRandomCategory, passing it retrieved 'categories'
       // Pay attention to what type of data that function returns vs what the chosenCategoryShortName
       // variable's name implies it expects.
-      // var chosenCategoryShortName = ....
+       console.log("here0");
+       var chosenCategoryShortName = chooseRandomCategory(categories);
+       console.log(chosenCategoryShortName);
+       var stringify = JSON.stringify(chosenCategoryShortName); 
+       console.log(stringify); 
+       console.log("before calling surrounToWorkWithFunction");  
+       chosenCategoryShortName = surroundToWorkWithFunction(chosenCategoryShortName); 
+       
+   
+       console.log("before calling buildCategoriesHTML");
+       var categoriesViewHtml = buildCategoriesViewHtml(chosenCategoryShortName,
+                                    categoriesTitleHtml,
+                                    categoryHtml);
 
+
+        console.log("After calling buildCategoriesHTML");
+        console.log("this is html for categories:"); 
+        console.log("categoriesViewHTML  " +  categoriesViewHtml); 
+
+        insertHtml("#main-content", categoriesViewHtml);
 
       // TODO: STEP 3: Substitute {{randomCategoryShortName}} in the home html snippet with the
       // chosen category from STEP 2. Use existing insertProperty function for that purpose.
@@ -127,12 +182,21 @@ function buildAndShowHomeHTML (categories) {
     false); // False here because we are getting just regular HTML from the server, so no need to process JSON.
 }
 
+function surroundToWorkWithFunction(jsonobj){
+  console.log("inside surroundToWorkWithFunction with obj equal to " + jsonobj);
+  console.log("where is JSON parse"); 
+  console.log("Stringify");
+  console.log("after concate[ ] obj stringify");
+  console.log("after obj invokes json.parse"); 
+  return jsonobj;
+}
+
 
 // Given array of category objects, returns a random category object.
 function chooseRandomCategory (categories) {
   // Choose a random index into the array (from 0 inclusively until array length (exclusively))
   var randomArrayIndex = Math.floor(Math.random() * categories.length);
-
+  console.log("ArrayIndex: " + randomArrayIndex); 
   // return category object with that randomArrayIndex
   return categories[randomArrayIndex];
 }
@@ -189,15 +253,21 @@ function buildCategoriesViewHtml(categories,
                                  categoriesTitleHtml,
                                  categoryHtml) {
 
-  var finalHtml = categoriesTitleHtml;
-  finalHtml += "<section class='row'>";
+  
+  //var finalHtml = categoryHtml;
+   var finalHtml = "<section class='row'>";
 
-  // Loop over categories
-  for (var i = 0; i < categories.length; i++) {
-    // Insert category values
+    console.log(categories.name);
+  
     var html = categoryHtml;
-    var name = "" + categories[i].name;
-    var short_name = categories[i].short_name;
+    var name = "" + categories.name;
+    var short_name = categories.short_name;
+    
+    console.log(name);
+    console.log(short_name); 
+
+    console.log("categoryHTML" + categoryHtml);
+
     html =
       insertProperty(html, "name", name);
     html =
@@ -205,9 +275,11 @@ function buildCategoriesViewHtml(categories,
                      "short_name",
                      short_name);
     finalHtml += html;
-  }
-
+  
+ 
   finalHtml += "</section>";
+
+  console.log("This is finalHTML" + finalHtml); 
   return finalHtml;
 }
 
@@ -260,6 +332,9 @@ function buildMenuItemsViewHtml(categoryMenuItems,
   // Loop over menu items
   var menuItems = categoryMenuItems.menu_items;
   var catShortName = categoryMenuItems.category.short_name;
+  
+  console.log("menuItems  is " + menuItems.length);
+
   for (var i = 0; i < menuItems.length; i++) {
     // Insert menu item values
     var html = menuItemHtml;

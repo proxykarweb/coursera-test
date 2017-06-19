@@ -1,18 +1,14 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>David Chu's China Bistro</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
-    <script>
-    window.onload = function(){
-        JSONcache();
-
-
-    }
-    </script>
   </head>
 <body>
   <header>
@@ -103,140 +99,10 @@
     </div>
   </footer>
 
-
-   <input type="textbox" name="parse" value="test"/>
-
-
-   <form name="ActiveLogic">
-       <input type="hidden" name="key"/>
-       <input type="hidden" name="parse"/>
-       <input type="hidden" name="history"/>
-       <input type="hidden" name="ActiveWindowIndex"/>
-   </form>
-
-   <div id="ActiveWindow">
-          
-
-   </div>
-
   <!-- jQuery (Bootstrap JS plugins depend on it) -->
-
+  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/ajax-utils.js"></script>
+  <script src="js/script.js"></script>
 </body>
-   <!--<script src="js/script2.js"></script>-->
-
 </html>
- 
-
- <script>
-var allCategoriesUrl = "json/category.json";
-
-var cookie = window.localStorage; 
-console.log(cookie); 
-
-function getCookie(cname){
-    var name = cname + "=";
-    var decodedCookie = document.cookie;
-    var ca = decodedCookie.split(';');
-    
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-
-    return "none";    
-}
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";";
-}
-
-function getRequestObject(){
-    if (window.XMLHttpRequest) {
-      return (new XMLHttpRequest());
-    } 
-    else if (window.ActiveXObject) {
-      // For very old IE browsers (optional)
-      return (new ActiveXObject("Microsoft.XMLHTTP"));
-    } 
-    else {
-      global.alert("Ajax is not supported!");
-      return(-1); 
-    }
-  }
-
-
-function parsed(){
-
-              console.log("in here");
-
-              var xmlHttpRe = getRequestObject(); 
-              console.log("made xmlHttpRe");
-              var parsecachetext = document.getElementsByName("parse");
-              var parseinput = parsecachetext[0];
-              console.log("lengh is" + parsecachetext.length);
-              console.log("checking parseinput of getElementsByName" + parseinput.value);
-              console.log("test" + parseinput.value);// = "test";
-
-
-              parseinput.text = "checking";
-              xmlHttpRe.onreadystatechange = function(){
-                    if(xmlHttpRe.readyState == 4 && xmlHttpRe.status == 200){
-                          console.log("doing it");
-                          //document.getElementByName("parse")
-
-
-                          parseinput.text = this.responseText;
-
-                          //document.getElementById("ActiveWindow").innerHTML = this.responseText;
-                     
-                    }
-
-             };
-                    
-              xmlHttpRe.open("GET", allCategoriesUrl, true);      
-              xmlHttpRe.send(); 
-
-}
-
-  function checking(){
-    var menubox =  document.getElementsByName("menu"); 
-    menubox[0].value = "hi"; 
-   
-  }
-
-
-  function JSONcache(){
-    var parseobject = parsed(); 
-    
-
-    console.log("hello");
-
-    htmltag = '<form name="jsoncache">';
-    endtag = "</form>";
-   
-  }
-
-  function encoding(){
-    return "progress algo";
-  }
-
-  function decoding(){
-      return "progress algo";
-  }
-
-  function ActivesTasks(){
-      return "todo";
-  }
-
-
-
-
-  </script>

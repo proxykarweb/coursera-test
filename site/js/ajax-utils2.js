@@ -1,3 +1,5 @@
+var responseHandler
+
 (function (global) {
 
 // Set up a namespace for our utility
@@ -54,18 +56,20 @@ function handleResponse(request,
     }
 
     if (isJsonResponse) {
-      responseHandler(JSON.parse(request.responseText));
+     responseHandler(request.responseText);
     }
+
     
-    else {
-      responseHandler(request.responseText);
-    }
+
+
+
+   
   }
+
+
 }
 
 // Expose utility to the global object
-global.$ajaxUtils = ajaxUtils;
-
-
+global.ajaxUtils = ajaxUtils;
 })(window);
 
